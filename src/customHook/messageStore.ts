@@ -8,8 +8,7 @@ interface Item {
 
 export function useCustomHook() {
   // Define the initial state as an array of objects
-  const [messages, setMsg] = useState<Item[]>([{id: "1", name: "Bot", msg: "Hello sir, How is your mood today?"}
-]);
+  const [messages, setMsg] = useState<Item[]>([]);
 
   // Add functions to manipulate the state as needed
   const addMsg = (newItem: Item) => {

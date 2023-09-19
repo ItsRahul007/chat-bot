@@ -31,6 +31,7 @@ function Chat(prop: GreetProps) {
       className={`h-5/6 w-full`}
     >
       <ul ref={ul} className="overflow-y-scroll text-slate-100 flex flex-col gap-1 chat_con h-full w-full">
+        <li className={`${msg_box} ${left_msg}`}>Hello sir, How is your mood today?</li>
         {messages &&
           messages.map((e: any, i: number) => {
             return (
