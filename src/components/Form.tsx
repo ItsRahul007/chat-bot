@@ -1,7 +1,8 @@
-import { useRef, useState, useEffect } from "react";
+import { useState } from "react";
 import generateUniqueId from "../uniqueId/getId";
 import "remixicon/fonts/remixicon.css";
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
+import socket from "../socket/socket";
 
 type GreetProps = {
   setMessages: any | undefined;
@@ -11,7 +12,6 @@ type GreetProps = {
 function Form(prop: GreetProps) {
   const { setMessages } = prop;
   const [text, setText] = useState("");
-  const voiceBtn = useRef<HTMLDivElement>(null);
 
   const {
     transcript,
@@ -32,18 +32,15 @@ function Form(prop: GreetProps) {
     setMessages({ id, name: "User", msg: text });
     setText("");
     resetTranscript();
+    socket.emit("send-msg", {msg: text})
   };
 
   // Toggling color
   function handleVoiceBtn() {
     if (!listening) {
-      voiceBtn.current?.classList.add("text-emerald-500");
-      voiceBtn.current?.classList.remove("text-white");
       SpeechRecognition.startListening();
       console.log("ok");
     } else {
-      voiceBtn.current?.classList.add("text-white");
-      voiceBtn.current?.classList.remove("text-emerald-500");
       SpeechRecognition.stopListening();
 
       console.log("off")
@@ -64,8 +61,7 @@ function Form(prop: GreetProps) {
       ></textarea>
 
       <div
-        className="h-10 w-10 flex bg-black justify-center items-center text-white text-xl rounded-lg"
-        ref={voiceBtn}
+        className={`h-10 w-10 flex justify-center items-center ${listening? "text-white bg-orange-400" : "text-white bg-black"} text-xl rounded-lg`}
         onClick={handleVoiceBtn}
       >
         <i className="ri-mic-line"></i>

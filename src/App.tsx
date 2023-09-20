@@ -2,23 +2,32 @@ import Chat from './components/Chat';
 import Form from './components/Form';
 import { useState, useEffect } from "react";
 import { useCustomHook } from './customHook/messageStore';
-
-interface Item {
-  id: string;
-  name: string;
-  msg: string | undefined
-};
-
+import socket from './socket/socket';
+import generateUniqueId from './uniqueId/getId';
 
 function App() {
-  // const [messages, setMessages] = useState<Item[]>([{id: "1", name: "Bot", msg: "Hello sir, How is your mood today?"}]);
 
   const { messages, addMsg } = useCustomHook();
   const [msg, setMsg] = useState(messages);
 
+  // Updating the message variable whenever something new added in custom state
   useEffect(()=>{
     setMsg(messages);
   }, [addMsg]);
+
+  // Listning the socket calls
+  useEffect(() => {
+    socket.on("mood", (e: any) => {
+      // addMsg({id: generateUniqueId(), name: "Bot", msg: e.msg})
+      console.log(e);
+    });
+
+    socket.on("hello", ()=>{
+      console.log("listning")
+    })
+
+  }, [socket]);
+  
 
   return (
     <div className="h-screen w-screen flex justify-center bg-emerald-500 items-center">

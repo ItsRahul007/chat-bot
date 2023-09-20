@@ -1,5 +1,5 @@
-import { useCustomHook } from "../customHook/messageStore";
 import { useEffect, useRef } from "react";
+import socket from "../socket/socket";
 
 type GreetProps = {
   messages: any | undefined;
@@ -21,6 +21,11 @@ function Chat(prop: GreetProps) {
     }
   }
 
+  function handlePickMood(mood: string): void{
+    socket.emit(mood);
+    console.log(mood)
+  };
+
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
@@ -32,6 +37,11 @@ function Chat(prop: GreetProps) {
     >
       <ul ref={ul} className="overflow-y-scroll text-slate-100 flex flex-col gap-1 chat_con h-full w-full">
         <li className={`${msg_box} ${left_msg}`}>Hello sir, How is your mood today?</li>
+        <li className="h-14">
+          <button className="p-3 text-5xl" onClick={()=>handlePickMood("happy")}>😊</button>
+          <button className="p-3 text-5xl" onClick={()=>handlePickMood("avarage")}>😐</button>
+          <button className="p-3 text-5xl" onClick={()=>handlePickMood("sad")}>😓</button>
+        </li>
         {messages &&
           messages.map((e: any, i: number) => {
             return (
