@@ -11,7 +11,7 @@ type GreetProps = {
 
 function Form(prop: GreetProps) {
   const { setMessages } = prop;
-  const [text, setText] = useState("");
+  const [text, setText] = useState<string>("");
 
   const {
     transcript,
@@ -32,7 +32,7 @@ function Form(prop: GreetProps) {
     setMessages({ id, name: "User", msg: text });
     setText("");
     resetTranscript();
-    socket.emit("send-msg", {msg: text})
+    socket.emit("send-msg", text);
   };
 
   // Toggling color
@@ -43,15 +43,18 @@ function Form(prop: GreetProps) {
     } else {
       SpeechRecognition.stopListening();
 
-      console.log("off")
-      console.log(transcript);
+      if(text){
+        setText(text + " " + transcript);
+      }
+      else (setText(transcript));
     };
   };
 
   return (
     <form
-      className="h-1/6 flex justify-center items-center gap-3"
+      className="h-1/6 flex justify-center items-center gap-3 hidden"
       onSubmit={handleSubmit}
+      id="form"
     >
       <textarea
         className="w-56 p-1"
@@ -61,7 +64,7 @@ function Form(prop: GreetProps) {
       ></textarea>
 
       <div
-        className={`h-10 w-10 flex justify-center items-center ${listening? "text-white bg-orange-400" : "text-white bg-black"} text-xl rounded-lg`}
+        className={`h-10 w-10 flex justify-center items-center ${listening? "text-teal-500 bg-yellow-950" : "text-white bg-black"} text-xl rounded-lg`}
         onClick={handleVoiceBtn}
       >
         <i className="ri-mic-line"></i>
@@ -76,6 +79,6 @@ function Form(prop: GreetProps) {
       </button>
     </form>
   );
-}
+};
 
 export default Form;

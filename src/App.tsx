@@ -13,26 +13,33 @@ function App() {
   // Updating the message variable whenever something new added in custom state
   useEffect(()=>{
     setMsg(messages);
-  }, [addMsg]);
+  }, [messages]);
 
   // Listning the socket calls
   useEffect(() => {
     socket.on("mood", (e: any) => {
-      // addMsg({id: generateUniqueId(), name: "Bot", msg: e.msg})
-      console.log(e);
+      const id: string = generateUniqueId();
+      addMsg({id, name: "Bot", msg: e.msg});
     });
 
-    socket.on("hello", ()=>{
-      console.log("listning")
-    })
+    socket.on("response", (e: any) => {
+      const id: string = generateUniqueId();      
+      addMsg({id, name: "Bot", msg: e.msg});
+      console.log(e)
+    });
 
+    return () => {
+      socket.off("mood");
+      socket.off("response");
+    };
+    
   }, [socket]);
   
 
   return (
     <div className="h-screen w-screen flex justify-center bg-emerald-500 items-center">
       <div className="h-5/6 w-96 rounded-sm bg-gray-300 overflow-hidden p-2">
-        <Chat messages={msg} />
+        <Chat addMsg={addMsg} messages={msg} />
         <Form setMessages={addMsg} messages={messages} />
       </div>
     </div>     

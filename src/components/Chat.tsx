@@ -3,27 +3,31 @@ import socket from "../socket/socket";
 
 type GreetProps = {
   messages: any | undefined;
+  addMsg: any | undefined;
 };
 
 function Chat(prop: GreetProps) {
-  const msg_box: string = "min-h-fit p-2 max-w-xs min-w-fit block list-none";
+  const msg_box: string = "min-h-fit p-2 m-2 max-w-xs min-w-fit block list-none";
   const left_msg: string = "bg-slate-500 float-left self-start";
   const right_msg: string = "bg-slate-700 float-right self-end";
 
-  const ul = useRef<HTMLUListElement>(null)
+  const ul = useRef<HTMLUListElement>(null);
+  const li = useRef<HTMLLIElement>(null);
 
-  const { messages } = prop;
+  const { messages, addMsg } = prop;
 
   // Function to scroll to bottom
-  function scrollToBottom() {  
+  function scrollToBottom() {
     if (ul.current) {
       ul.current.scrollTop = ul.current.scrollHeight;
     }
   }
 
-  function handlePickMood(mood: string): void{
+  function handlePickMood(e: any, mood: string) {
+    document.getElementById("form")?.classList.remove("hidden")
+    addMsg({ id: "1", name: "User", msg: e.target.innerText });
+    li.current?.classList.add("hidden");
     socket.emit(mood);
-    console.log(mood)
   };
 
   useEffect(() => {
@@ -31,22 +35,39 @@ function Chat(prop: GreetProps) {
   }, [messages]);
 
   return (
-    <div
-      id="chat"
-      className={`h-5/6 w-full`}
-    >
-      <ul ref={ul} className="overflow-y-scroll text-slate-100 flex flex-col gap-1 chat_con h-full w-full">
-        <li className={`${msg_box} ${left_msg}`}>Hello sir, How is your mood today?</li>
-        <li className="h-14">
-          <button className="p-3 text-5xl" onClick={()=>handlePickMood("happy")}>😊</button>
-          <button className="p-3 text-5xl" onClick={()=>handlePickMood("avarage")}>😐</button>
-          <button className="p-3 text-5xl" onClick={()=>handlePickMood("sad")}>😓</button>
+    <div id="chat" className={`h-5/6 w-full`}>
+      <ul
+        ref={ul}
+        className="overflow-y-scroll text-slate-100 flex flex-col gap-1 chat_con h-full w-full"
+      >
+        <li className={`${msg_box} ${left_msg}`}>
+          Hello sir, How is your mood today?
+        </li>
+        <li className="h-14 mb-2" ref={li}>
+          <button
+            className="p-3 text-5xl"
+            onClick={(e: any) => handlePickMood(e, "happy")}
+          >
+            😊
+          </button>
+          <button
+            className="p-3 text-5xl"
+            onClick={(e: any) => handlePickMood(e, "avarage")}
+          >
+            😐
+          </button>
+          <button
+            className="p-3 text-5xl"
+            onClick={(e: any) => handlePickMood(e, "sad")}
+          >
+            😓
+          </button>
         </li>
         {messages &&
           messages.map((e: any, i: number) => {
             return (
               <li
-                key={i}
+                key={e.id}
                 className={`${msg_box} ${
                   e.name === "User" ? right_msg : left_msg
                 }`}
