@@ -14,7 +14,7 @@ export function useCustomHook() {
     setMsg((prevMessages) => [...prevMessages, newItem]);
   };  
 
-  const removeMsg = () => {
+  const remove = () => {
     setMsg([]);
   };
 
@@ -22,6 +22,6 @@ export function useCustomHook() {
   return {
     messages,
     addMsg,
-    removeMsg,
+    remove,
   };
 };

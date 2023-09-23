@@ -2,15 +2,17 @@ import { useState } from "react";
 import generateUniqueId from "../uniqueId/getId";
 import "remixicon/fonts/remixicon.css";
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
-import socket from "../socket/socket";
+import matchetext from "../matchtext";
 
 type GreetProps = {
   setMessages: any | undefined;
   messages: any | undefined;
+  form: any | undefined;
+  setMatch: any | undefined;
 };
 
 function Form(prop: GreetProps) {
-  const { setMessages } = prop;
+  const { setMessages, form, setMatch } = prop;
   const [text, setText] = useState<string>("");
 
   const {
@@ -30,9 +32,9 @@ function Form(prop: GreetProps) {
     e.preventDefault();
     const id: string = generateUniqueId();
     setMessages({ id, name: "User", msg: text });
-    setText("");
+    setMatch(matchetext(text));
     resetTranscript();
-    socket.emit("send-msg", text);
+    setText("");
   };
 
   // Toggling color
@@ -43,7 +45,7 @@ function Form(prop: GreetProps) {
     } else {
       SpeechRecognition.stopListening();
 
-      if(text){
+      if (text) {
         setText(text + " " + transcript);
       }
       else (setText(transcript));
@@ -54,7 +56,7 @@ function Form(prop: GreetProps) {
     <form
       className="h-1/6 flex justify-center items-center gap-3 hidden"
       onSubmit={handleSubmit}
-      id="form"
+      ref={form}
     >
       <textarea
         className="w-56 p-1"
@@ -64,7 +66,7 @@ function Form(prop: GreetProps) {
       ></textarea>
 
       <div
-        className={`h-10 w-10 flex justify-center items-center ${listening? "text-teal-500 bg-yellow-950" : "text-white bg-black"} text-xl rounded-lg`}
+        className={`h-10 w-10 flex justify-center items-center ${listening ? "text-teal-500 bg-yellow-950" : "text-white bg-black"} text-xl rounded-lg`}
         onClick={handleVoiceBtn}
       >
         <i className="ri-mic-line"></i>
