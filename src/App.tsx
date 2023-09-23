@@ -7,6 +7,9 @@ import generateUniqueId from './uniqueId/getId';
 import { useQuery } from 'react-query';
 import axios from 'axios';
 import useSummary from './customHook/summary';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Greet from './components/Greet';
 
 function App() {
 
@@ -62,8 +65,22 @@ function App() {
     };
   }, [data]);
 
+
   return (
-    <div className="h-screen w-screen flex justify-center bg-emerald-500 items-center">
+    <div className="h-screen w-screen flex justify-center bg-emerald-500 items-center relative">
+      <ToastContainer
+        position="top-center"
+        autoClose={4000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
+      <Greet />
       <div className="h-5/6 w-96 rounded-sm bg-gray-300 overflow-hidden p-2">
         <Chat addMsg={addMsg} remove={remove} messages={msg} form={form} button={button} summary={summary} addSummary={addSummary} clearSummary={clearSummary} />
         <Form setMessages={addMsg} messages={messages} form={form} setMatch={setMatch} />

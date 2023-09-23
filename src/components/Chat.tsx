@@ -1,6 +1,5 @@
 import { useEffect, useRef } from "react";
 import socket from "../socket/socket";
-import useSummary from "../customHook/summary";
 
 type GreetProps = {
   messages: any | undefined;
